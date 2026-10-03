@@ -35,7 +35,7 @@
 <div><label class="field-label" for="employee_email">Email address (optional)</label><input type="email" id="employee_email" name="_replyto" autocomplete="email"></div>
 </div></section>
 <fieldset class="scope" id="scope" hidden><legend>Which duties do you perform?</legend><div class="choices" id="choices"></div><p>Select duties you are assigned, including duties where you need further training.</p></fieldset>
-<div class="instructions"><strong>Instructions</strong><p>Select one rating for each question. Use the comment boxes to give examples or describe any training or support you need.</p><div class="scale"><span>1 · Unsatisfactory</span><span>2 · Needs Improvement</span><span>3 · Satisfactory</span><span>4 · Very Good</span><span>5 · Excellent</span><span>N/A · Not applicable</span></div><p>A comment is required for ratings of 1 or 2. Use N/A for duties outside your role or not performed during this review period.</p></div>
+<div class="instructions"><strong>Instructions</strong><p>Select one rating for each question. The question numbers match the scored items in the staff review. Use the comment boxes to give examples or describe any training or support you need.</p><div class="scale"><span>1 · Unsatisfactory</span><span>2 · Needs Improvement</span><span>3 · Satisfactory</span><span>4 · Very Good</span><span>5 · Excellent</span><span>N/A · Not applicable</span></div><p>A comment is required for ratings of 1 or 2. Use N/A for duties outside your role or not performed during this review period.</p></div>
 <div id="sections"></div>
 <p id="formStatus" class="form-status" role="alert"></p>
 <button class="submit" type="submit">Submit self-assessment</button>
@@ -43,99 +43,525 @@
 </main>
 <script>
 const common = [
- {title:'Punctuality and attendance',items:[
-  ['attendance_on_time','How consistently do you arrive on time and give adequate notice if you will be late?','2.01'],
-  ['attendance_notice','How consistently do you give adequate notice when you cannot attend work?','2.02'],
-  ['attendance_breaks','How consistently do you keep to the allowed break times?','2.03'],
-  ['attendance_shift','How consistently do you remain on site and work through to the end of your shift, unless authorised otherwise?','2.04–2.05'],
-  ['attendance_phone','How consistently do you keep personal phone use within company expectations?','2.06']
- ]},
- {title:'Communication, teamwork and conduct',items:[
-  ['conduct_directions','How well do you listen to instructions, clarify anything you are unsure about and complete tasks as directed?','3.02'],
-  ['conduct_initiative','How consistently do you take initiative and assist other members of the crew?','3.03'],
-  ['conduct_colleagues','How well do you work cooperatively and respectfully with assigned colleagues and resolve issues appropriately?','3.04–3.05'],
-  ['conduct_clients','How professionally do you interact with clients, authorities and members of the public?','3.06'],
-  ['conduct_concerns','How constructively do you raise concerns and respond to feedback or directions?','3.07;4.07']
- ]},
- {title:'Safety and readiness for work',items:[
-  ['safety_procedures','How consistently do you follow company induction and OH&S requirements, including the safety controls relevant to your assigned work?','3.01;4.01;4.04'],
-  ['safety_ppe','How consistently do you use the required PPE correctly on site?','4.02'],
-  ['safety_prestart','How consistently do you complete the required safety checklists and plant pre-starts before use?','4.03'],
-  ['safety_hazards','How consistently do you identify hazards, report concerns and take care to protect others on site?','4.05;4.07'],
-  ['safety_public','How consistently do you keep the work area secure, protect open pits or maintenance holes, and replace lids or grates when work is finished?','4.06;7.06;8.14;9.07'],
-  ['safety_heights','How consistently do you follow the company requirements for work at heights and fall prevention, where applicable to your duties?','4.04'],
-  ['safety_fatigue','How consistently do you arrive fit for work and manage fatigue in line with company requirements?','6.01'],
-  ['safety_limits','How consistently do you work within your training, licence and authorisation limits and seek assistance when required?','6.03;7.01;8.02']
- ]},
- {title:'Equipment care and job records',items:[
-  ['equipment_care','How consistently do you operate and maintain equipment with care, complete required checks and report faults promptly?','5.01–5.02;5.04'],
-  ['equipment_clean','How consistently do you keep the vehicles, plant and work areas you use clean and tidy?','5.03'],
-  ['equipment_storage','How consistently do you handle, secure and store tools and equipment to prevent damage, including during travel?','5.05'],
-  ['records_simpro','How consistently do you complete accurate SIMPRO job details, work records and on-job / off-job time entries?','7.15;8.15;9.06']
- ]}
+ {
+  "title": "Punctuality and attendance",
+  "items": [
+   [
+    "attendance_on_time",
+    "How consistently do you arrive on time and give adequate notice of late arrival?",
+    "2.01"
+   ],
+   [
+    "attendance_notice",
+    "How consistently do you give adequate notice of non-attendance?",
+    "2.02"
+   ],
+   [
+    "attendance_breaks",
+    "How consistently do you adhere to allowed break times?",
+    "2.03"
+   ],
+   [
+    "attendance_site",
+    "How consistently do you remain on site unless authorised to leave?",
+    "2.04"
+   ],
+   [
+    "attendance_shift",
+    "How consistently do you work through to the end of the shift?",
+    "2.05"
+   ],
+   [
+    "attendance_phone",
+    "How consistently do you keep personal phone use within company expectations?",
+    "2.06"
+   ]
+  ]
+ },
+ {
+  "title": "General workplace attitude and rapport",
+  "items": [
+   [
+    "conduct_induction",
+    "How consistently do you adhere to Leading Civil Solutions' Employee Induction Policy Manual?",
+    "3.01"
+   ],
+   [
+    "conduct_directions",
+    "How consistently do you communicate with supervisors and follow directions?",
+    "3.02"
+   ],
+   [
+    "conduct_initiative",
+    "How consistently do you take initiative and assist fellow staff?",
+    "3.03"
+   ],
+   [
+    "conduct_colleagues",
+    "How consistently do you work cooperatively and respectfully with fellow workers?",
+    "3.04"
+   ],
+   [
+    "conduct_assigned_colleagues",
+    "How consistently do you work constructively with assigned colleagues and resolve issues appropriately?",
+    "3.05"
+   ],
+   [
+    "conduct_clients",
+    "How consistently do you interact professionally with clients, authorities and the public?",
+    "3.06"
+   ],
+   [
+    "conduct_concerns",
+    "How consistently do you maintain a cooperative attitude, avoid disruptive complaining and raise concerns constructively?",
+    "3.07"
+   ]
+  ]
+ },
+ {
+  "title": "OH&S performance",
+  "items": [
+   [
+    "safety_procedures",
+    "How well do you understand and comply with Leading Civil Solutions' OH&S system?",
+    "4.01"
+   ],
+   [
+    "safety_ppe",
+    "How consistently do you use required PPE correctly on site?",
+    "4.02"
+   ],
+   [
+    "safety_prestart",
+    "How consistently do you complete relevant safety checklists and daily plant pre-starts?",
+    "4.03"
+   ],
+   [
+    "safety_heights",
+    "How consistently do you follow company requirements for work at heights and fall prevention?",
+    "4.04"
+   ],
+   [
+    "safety_duty_care",
+    "How consistently do you work safely and show duty of care towards fellow employees?",
+    "4.05"
+   ],
+   [
+    "safety_public",
+    "How consistently do you protect the public by keeping work areas secure and properly barricaded?",
+    "4.06"
+   ],
+   [
+    "safety_hazards",
+    "How consistently do you identify hazards, report concerns and respond positively to safety directions?",
+    "4.07"
+   ]
+  ]
+ },
+ {
+  "title": "Equipment management and care",
+  "items": [
+   [
+    "equipment_care",
+    "How consistently do you operate and maintain plant safely and with due care?",
+    "5.01"
+   ],
+   [
+    "equipment_checks",
+    "How consistently do you complete required equipment checks and report faults promptly?",
+    "5.02"
+   ],
+   [
+    "equipment_clean",
+    "How consistently do you keep the vehicle, plant and work area clean and tidy?",
+    "5.03"
+   ],
+   [
+    "equipment_tools",
+    "How consistently do you use and handle tools with care?",
+    "5.04"
+   ],
+   [
+    "equipment_storage",
+    "How consistently do you handle, secure and store equipment to minimise damage, including during travel?",
+    "5.05"
+   ]
+  ]
+ },
+ {
+  "title": "Work readiness and operating capability",
+  "items": [
+   [
+    "safety_fatigue",
+    "How consistently do you arrive fit for work and manage fatigue in line with company requirements?",
+    "6.01"
+   ],
+   [
+    "safety_limits",
+    "How consistently do you drive and operate assigned vehicles and equipment within your licence and training limits?",
+    "6.03"
+   ]
+  ]
+ }
 ];
 const technical = {
- combo:{title:'Combo / Jetting performance',items:[
-  ['combo_scope','How well do you confirm the job scope, read relevant plans and prepare an efficient work sequence with the site team?','8.01–8.02'],
-  ['combo_jetting','How well do you select and operate jetting equipment suited to the assigned task and procedures?','8.04'],
-  ['combo_vacuum','How well do you operate vacuum equipment carefully and complete the assigned recovery work?','8.06'],
-  ['combo_ndd','How well do you complete assigned non-destructive digging (NDD) work to the approved procedures?','8.07'],
-  ['combo_hoses','How consistently do you inspect and care for vacuum / NDD hoses and use tiger tails or hose protection where required?','8.05;8.10–8.11'],
-  ['combo_filters','How consistently do you complete routine truck upkeep and required filter cleaning in line with the equipment instructions?','8.08–8.09'],
-  ['combo_waste','How consistently do you handle recovered waste or spoil correctly and complete the required disposal records?','8.13'],
-  ['combo_nhvr','How consistently do you comply with the NHVR requirements applicable to your duties, including fatigue, loading and vehicle standards?','8.16']
- ]},
- cctv:{title:'CCTV performance',items:[
-  ['cctv_scope','How well do you read plans, confirm the correct assets and inspection scope, and plan an efficient inspection sequence?','7.02–7.03'],
-  ['cctv_checks','How consistently do you check CCTV equipment before use, including pressure and sealing checks where required?','7.07'],
-  ['cctv_footage','How well do you set up and operate the camera / tractor to obtain clear, usable footage?','7.08'],
-  ['cctv_cables','How consistently do you handle camera cables, reels and attachments carefully to prevent damage?','7.09'],
-  ['cctv_defects','How accurately do you record asset details, defect observations and measurements?','7.10'],
-  ['cctv_client','How well do you understand and apply the CCTV requirements of the client and asset owner?','7.11'],
-  ['cctv_wsa','How well do you understand and apply the relevant WSA 05 CCTV reporting requirements?','7.12'],
-  ['cctv_reports','How consistently do you finalise the required WinCan reports, videos, spreadsheets and plan markups on site?','7.13'],
-  ['cctv_rework','How consistently do you check submissions for completeness and resolve footage or reporting rework?','7.14']
- ]},
- rehab:{title:'Pipeline rehabilitation performance',items:[
-  ['rehab_scope','How well do you use plans and inspection information to confirm the repair location and scope?','9.01'],
-  ['rehab_prepare','How effectively do you prepare the materials and specialised equipment required for the assigned repair?','9.02'],
-  ['rehab_install','How well do you prepare the repair area and install assigned Quick-Lock repairs or fibreglass patches to the required quality?','9.03'],
-  ['rehab_confined','How well do you understand and fulfil your assigned confined-space responsibilities, including permit and rescue requirements where relevant to your role?','9.04'],
-  ['rehab_quality','How consistently do you check repair quality and record the materials used and before / after evidence?','9.06'],
-  ['rehab_resin_care','How consistently do you handle resin carefully to prevent spills and damage to truck paintwork or equipment?','13.01'],
-  ['rehab_resin_store','How consistently do you store resin in sealed, secured containers within the designated spill-contained area?','13.02']
- ]},
- robotics:{title:'Robotics performance',items:[
-  ['robotics_prepare','How effectively do you select and prepare the robotic equipment and attachments required for the approved work scope?','10.01'],
-  ['robotics_checks','How consistently do you complete pre-use checks and safely deploy and retrieve robotic equipment?','10.02'],
-  ['robotics_control','How accurately do you control the robot and monitor the work to protect the pipeline?','10.03'],
-  ['robotics_quality','How well do you complete assigned cutting, grinding or connection reinstatement to the required quality?','10.04'],
-  ['robotics_maintain','How consistently do you clean, maintain and store robotic equipment and report damage or faults?','10.05']
- ]},
- uhp:{title:'Ultra-high-pressure water jetting performance',items:[
-  ['uhp_prepare','How effectively do you prepare ultra-high-pressure water jetting equipment for the assigned work?','11.01'],
-  ['uhp_checks','How consistently do you check hoses, fittings and equipment and report defects before use?','11.02'],
-  ['uhp_safety','How consistently do you operate within your training and approved procedures, including the required safety controls?','11.03'],
-  ['uhp_quality','How well do you complete the assigned cleaning or removal work while protecting the pipeline and site?','11.04'],
-  ['uhp_maintain','How consistently do you clean, maintain and store the equipment and record completed work and faults?','11.05']
- ]}
+ "cctv": {
+  "title": "CCTV production performance",
+  "items": [
+   [
+    "cctv_independent",
+    "How consistently do you work independently within training and seek assistance when required?",
+    "7.01"
+   ],
+   [
+    "cctv_scope",
+    "How well do you read plans and confirm the correct assets and inspection scope?",
+    "7.02"
+   ],
+   [
+    "cctv_sequence",
+    "How well do you plan an efficient inspection sequence to meet the client's requirements?",
+    "7.03"
+   ],
+   [
+    "cctv_coordination",
+    "How well do you coordinate with the client, principal contractor and other LCS employees?",
+    "7.04"
+   ],
+   [
+    "cctv_quality",
+    "How consistently do you take pride in work and complete assigned tasks to the required quality?",
+    "7.05"
+   ],
+   [
+    "cctv_setup",
+    "How consistently do you set up the work area safely and close pit lids and grates when finished?",
+    "7.06"
+   ],
+   [
+    "cctv_checks",
+    "How consistently do you check CCTV equipment before use, including pressure / sealing where required?",
+    "7.07"
+   ],
+   [
+    "cctv_footage",
+    "How consistently do you set up and operate the camera / tractor to obtain clear, usable footage?",
+    "7.08"
+   ],
+   [
+    "cctv_cables",
+    "How consistently do you handle camera cables, reels and attachments carefully to prevent damage?",
+    "7.09"
+   ],
+   [
+    "cctv_defects",
+    "How consistently do you record accurate asset details, defect observations and measurements?",
+    "7.10"
+   ],
+   [
+    "cctv_client",
+    "How well do you understand and apply relevant client and asset-owner CCTV requirements?",
+    "7.11"
+   ],
+   [
+    "cctv_wsa",
+    "How well do you understand and apply the relevant WSA 05 (WSAA) CCTV reporting requirements?",
+    "7.12"
+   ],
+   [
+    "cctv_reports",
+    "How consistently do you finalise WinCan reports, videos, spreadsheets and plan markups on site?",
+    "7.13"
+   ],
+   [
+    "cctv_rework",
+    "How consistently do you check submissions for completeness and resolve footage or reporting rework?",
+    "7.14"
+   ],
+   [
+    "cctv_simpro",
+    "How consistently do you complete SIMPRO job details, activities and work records, including accurate on-job / off-job time entries?",
+    "7.15"
+   ]
+  ]
+ },
+ "combo": {
+  "title": "Combo / Jet production performance",
+  "items": [
+   [
+    "combo_scope",
+    "How well do you understand the job scope, read plans and plan the work efficiently?",
+    "8.01"
+   ],
+   [
+    "combo_coordination",
+    "How consistently do you work within training and coordinate with the client and site team?",
+    "8.02"
+   ],
+   [
+    "combo_setup",
+    "How consistently do you set up the truck and work area with suitable access, barriers and pit protection?",
+    "8.03"
+   ],
+   [
+    "combo_jetting",
+    "How well do you select and operate jetting equipment suited to the assigned task and procedures?",
+    "8.04"
+   ],
+   [
+    "combo_hose_protection",
+    "How consistently do you use and care for tiger tails / hose protection at pipe and pit entry points?",
+    "8.05"
+   ],
+   [
+    "combo_vacuum",
+    "How consistently do you operate vacuum equipment carefully and complete assigned recovery work?",
+    "8.06"
+   ],
+   [
+    "combo_ndd",
+    "How consistently do you complete assigned non-destructive digging (NDD) work to approved procedures?",
+    "8.07"
+   ],
+   [
+    "combo_upkeep",
+    "How consistently do you maintain the truck through routine operator upkeep and timely defect reporting?",
+    "8.08"
+   ],
+   [
+    "combo_filters",
+    "How consistently do you complete daily filter cleaning in line with equipment instructions?",
+    "8.09"
+   ],
+   [
+    "combo_vacuum_hoses",
+    "How consistently do you inspect and handle vacuum hoses to prevent damage and report defects promptly?",
+    "8.10"
+   ],
+   [
+    "combo_ndd_hoses",
+    "How consistently do you inspect and handle NDD hoses to prevent damage and report defects promptly?",
+    "8.11"
+   ],
+   [
+    "combo_storage",
+    "How consistently do you store and secure hoses, fittings and tools correctly after use and for travel?",
+    "8.12"
+   ],
+   [
+    "combo_waste",
+    "How consistently do you handle recovered waste / spoil and complete disposal records as required?",
+    "8.13"
+   ],
+   [
+    "combo_site_finish",
+    "How consistently do you replace and secure pit lids and grates after work and leave the site clean and safe?",
+    "8.14"
+   ],
+   [
+    "combo_simpro",
+    "How consistently do you complete SIMPRO job details, activities and work records, including accurate on-job / off-job time entries?",
+    "8.15"
+   ],
+   [
+    "combo_nhvr",
+    "How consistently do you comply with applicable NHVR requirements, including fatigue, loading and vehicle standards?",
+    "8.16"
+   ]
+  ]
+ },
+ "rehab": {
+  "title": "Pipeline rehabilitation performance",
+  "items": [
+   [
+    "rehab_scope",
+    "How well do you read plans and inspection information to confirm repair location and scope?",
+    "9.01"
+   ],
+   [
+    "rehab_prepare",
+    "How consistently do you prepare required materials and specialised equipment for the assigned work?",
+    "9.02"
+   ],
+   [
+    "rehab_install",
+    "How consistently do you prepare the repair area and install Quick-Lock repairs or fibreglass patches as assigned?",
+    "9.03"
+   ],
+   [
+    "rehab_confined",
+    "How consistently do you work within training and fulfil assigned confined-space responsibilities?",
+    "9.04"
+   ],
+   [
+    "rehab_coordination",
+    "How well do you coordinate with the crew and client and complete assigned work reliably?",
+    "9.05"
+   ],
+   [
+    "rehab_quality",
+    "How consistently do you check repair quality and record materials, before / after evidence and SIMPRO job details, activities and work records, including accurate on-job / off-job time entries?",
+    "9.06"
+   ],
+   [
+    "rehab_site_finish",
+    "How consistently do you close pit lids and grates and leave the completed work area clean and safe?",
+    "9.07"
+   ]
+  ]
+ },
+ "robotics": {
+  "title": "Robotics performance",
+  "items": [
+   [
+    "robotics_prepare",
+    "How well do you select and prepare robotic equipment and attachments for the approved work scope?",
+    "10.01"
+   ],
+   [
+    "robotics_checks",
+    "How consistently do you complete pre-use checks and safely deploy and retrieve robotic equipment?",
+    "10.02"
+   ],
+   [
+    "robotics_control",
+    "How well do you control the robot accurately and monitor the work to protect the pipeline?",
+    "10.03"
+   ],
+   [
+    "robotics_quality",
+    "How consistently do you complete assigned cutting, grinding or connection reinstatement to the required quality?",
+    "10.04"
+   ],
+   [
+    "robotics_maintain",
+    "How consistently do you clean, maintain and store robotic equipment and report damage or faults?",
+    "10.05"
+   ]
+  ]
+ },
+ "uhp": {
+  "title": "Ultra-high-pressure water jetting performance",
+  "items": [
+   [
+    "uhp_prepare",
+    "How consistently do you prepare ultra-high-pressure water jetting (UHPWJ) equipment for the assigned work?",
+    "11.01"
+   ],
+   [
+    "uhp_checks",
+    "How consistently do you check hoses, fittings and equipment and report defects before use?",
+    "11.02"
+   ],
+   [
+    "uhp_safety",
+    "How consistently do you operate within training and approved procedures, including required safety controls?",
+    "11.03"
+   ],
+   [
+    "uhp_quality",
+    "How consistently do you complete assigned cleaning / removal work while protecting the pipeline and site?",
+    "11.04"
+   ],
+   [
+    "uhp_maintain",
+    "How consistently do you clean, maintain and store UHPWJ equipment and record completed work and faults?",
+    "11.05"
+   ]
+  ]
+ }
 };
-const media={title:'Footage uploads and media handover',items:[
- ['media_upload','How consistently do you upload completed footage to the required Dropbox / SharePoint job folder and check the upload is complete?','12.01'],
- ['media_usb','How consistently do you provide the correct, labelled USB to the client when required and confirm the handover?','12.02'],
- ['media_ssd','How consistently do you return the labelled SSD to the designated depot drop-off point and record the handover?','12.03']
-]};
-const switching={title:'Working across multiple roles',items:[
- ['multi_switching','How effectively do you switch between assigned roles and prepare the correct equipment for each task?','6.02']
-]};
-const development={title:'Strengths, development and feedback',open:true,items:[
- ['development_strength','What are your main strengths, and what work or improvements are you most proud of during this review period?','Other Comments;14.04'],
- ['development_improve','Which duties or expectations do you need to improve, and what training or support would help?','14.06'],
- ['development_tickets','Which tickets or licences need renewal, and what additional training would help you perform your assigned duties?','14.02–14.03'],
- ['development_goals','What specific goals would you like to achieve over the next 12 months?','14.05'],
- ['development_incidents','Are there any safety incidents, equipment damage or rework during the review period that you would like to discuss? What did you learn or change afterwards?','4.08;5.06;7.14'],
- ['development_feedback','Is there anything else you would like to discuss about your role, working arrangements or support from the company?','Other Comments / Employee Feedback']
-]};
+const media = {
+ "title": "Footage uploads and media handover",
+ "items": [
+  [
+   "media_upload",
+   "How consistently do you upload completed footage to the required Dropbox / SharePoint job folder and check that the upload is complete?",
+   "12.01"
+  ],
+  [
+   "media_usb",
+   "How consistently do you provide the correct, labelled USB to the client when required and confirm the handover?",
+   "12.02"
+  ],
+  [
+   "media_ssd",
+   "How consistently do you return the labelled SSD to the designated depot drop-off point and record the handover?",
+   "12.03"
+  ]
+ ]
+};
+const resin = {
+ "title": "Resin handling and truck protection",
+ "items": [
+  [
+   "rehab_resin_care",
+   "How consistently do you handle resin carefully to prevent spills and damage to truck paintwork and equipment?",
+   "13.01"
+  ],
+  [
+   "rehab_resin_store",
+   "How consistently do you store resin in sealed, secured containers within the designated spill-contained area?",
+   "13.02"
+  ]
+ ]
+};
+const switching = {
+ "title": "Multi-role capability",
+ "items": [
+  [
+   "multi_switching",
+   "How consistently do you switch effectively between assigned roles and prepare the right equipment for each task?",
+   "6.02"
+  ]
+ ]
+};
+const development = {
+ "title": "Training, development and availability",
+ "open": true,
+ "items": [
+  [
+   "development_strength",
+   "What are your main strengths, and what work or improvements are you most proud of during this review period?",
+   "14.04"
+  ],
+  [
+   "development_improve",
+   "Which duties or expectations do you need to improve, and what training or support would help?",
+   "14.06"
+  ],
+  [
+   "development_tickets",
+   "Which tickets or licences need renewal, and what additional training would help you perform your assigned duties?",
+   "14.02–14.03"
+  ],
+  [
+   "development_goals",
+   "What specific goals would you like to achieve over the next 12 months?",
+   "14.05"
+  ],
+  [
+   "development_overtime",
+   "What is your willingness and availability to work additional hours, overtime and weekends when required? Please outline your usual availability, the notice you need and any commitments or limitations.",
+   "Written response — availability"
+  ],
+  [
+   "development_incidents",
+   "Have you been involved in any safety incidents in the last 12 months? Please outline the incident, reporting and follow-up actions, or enter None.",
+   "4.08"
+  ],
+  [
+   "development_damage",
+   "Has there been any equipment damage in the last 12 months, including vacuum / NDD hoses? Please outline the cause and follow-up actions, or enter None.",
+   "5.06"
+  ],
+  [
+   "development_feedback",
+   "Is there anything else you would like to discuss about your role, working arrangements or support from the company?",
+   "Other Comments / Employee Feedback"
+  ]
+ ]
+};
 const titles={combo:'Combo / Jetting Operator Self-Assessment',cctv:'CCTV Operator Self-Assessment',robotics:'Robotics / Rehabilitation Operator Self-Assessment',multi:'Multi-Role Operator Self-Assessment'};
 const labels={combo:'Combo / Jetting',cctv:'CCTV',rehab:'Pipeline rehabilitation',robotics:'Robotics',uhp:'Ultra-high-pressure water jetting'};
 
@@ -179,19 +605,21 @@ function render(){
   document.querySelectorAll('#choices input').forEach(input=>input.addEventListener('change',()=>{captureAnswers();const key=input.value;if(input.checked)selected[current].add(key);else selected[current].delete(key);render();document.querySelector(`#choices input[value="${key}"]`)?.focus();}));
  }
  const roleDuties=duties();
- visible=[...common];if(current==='multi')visible.push(switching);
- ['combo','cctv','rehab','robotics','uhp'].filter(key=>roleDuties.includes(key)).forEach(key=>visible.push(technical[key]));
+ visible=common.map(section=>({...section,items:[...section.items]}));
+ if(current==='multi')visible[visible.length-1].items.splice(1,0,switching.items[0]);
+ ['cctv','combo','rehab','robotics','uhp'].filter(key=>roleDuties.includes(key)).forEach(key=>visible.push(technical[key]));
  if(roleDuties.some(key=>['cctv','rehab','robotics','uhp'].includes(key)))visible.push(media);
+ if(roleDuties.includes('rehab'))visible.push(resin);
  visible.push(development);
  document.getElementById('assessment_version').value=titles[current];
  document.getElementById('assigned_duties').value=roleDuties.map(key=>labels[key]).join(', ');
  let number=0;
- document.getElementById('sections').innerHTML=visible.map((section,index)=>`<section class="section ${section.open?'open':''}"><div class="sectionhead"><h3>${index+1}. ${esc(section.title)}</h3></div>${section===media?'<p class="muted">Rate only the uploads and handovers assigned to you. Use N/A where they are outside your duties.</p>':''}${section.items.map(item=>{
+ document.getElementById('sections').innerHTML=visible.map((section,index)=>`<section class="section ${section.open?'open':''}"><div class="sectionhead"><h3>${section.open?'14':section.items[0][2].split('.')[0]}. ${esc(section.title)}</h3></div>${section===media?'<p class="muted">Rate only the uploads and handovers assigned to you. Use N/A where they are outside your duties.</p>':''}${section.items.map(item=>{
   const [id,text,reference]=item;const answer=answers[id]||{};
-  const question=`<legend><span class="qno">${++number}.</span>${esc(text)}</legend>`;
+  const question=`<legend><span class="qno">${section.open?++number+'.':esc(reference)}</span>${esc(text)}</legend>`;
   if(section.open)return `<fieldset class="question" data-kind="open" data-question-id="${id}">${question}<label class="response-label" for="${id}">Your response</label><textarea id="${id}" name="${id}" rows="3" placeholder="Enter your response...">${esc(answer.response)}</textarea><div class="print-answer">${esc(answer.response)}</div></fieldset>`;
   const options=['1','2','3','4','5','N/A'].map(value=>`<label class="rating-choice" for="${id}_${value.replace('/','')}"><input type="radio" id="${id}_${value.replace('/','')}" name="${id}" value="${value}" aria-label="${value} ${ratingNames[value]}" ${answer.rating===value?'checked':''} required>${value}</label>`).join('');
-  return `<fieldset class="question" data-kind="rated" data-question-id="${id}">${question}<div class="rating-options">${options}</div><label class="comment-label" for="${id}_comments">Comments or examples</label><span class="required-note" hidden>Please explain your rating of 1 or 2.</span><textarea id="${id}_comments" name="${id}_comments" rows="3" placeholder="Add an example or describe any training or support needed...">${esc(answer.comment)}</textarea><div class="print-answer">${esc(answer.comment)}</div></fieldset>`;
+  return `<fieldset class="question" data-kind="rated" data-question-id="${id}" data-review-criterion="${esc(reference)}">${question}<div class="rating-options">${options}</div><label class="comment-label" for="${id}_comments">Comments or examples</label><span class="required-note" hidden>Please explain your rating of 1 or 2.</span><textarea id="${id}_comments" name="${id}_comments" rows="3" placeholder="Add an example or describe any training or support needed...">${esc(answer.comment)}</textarea><div class="print-answer">${esc(answer.comment)}</div></fieldset>`;
  }).join('')}</section>`).join('');
  document.querySelectorAll('#sections .question').forEach(question=>{
   const textarea=question.querySelector('textarea');
@@ -203,7 +631,7 @@ function render(){
 }
 function answerSummary(){
  captureAnswers();let number=0;
- return ['LEADING CIVIL SOLUTIONS',titles[current],`Name: ${document.getElementById('employee_name').value}`,`Review period: ${document.getElementById('review_period').value}`,`Email: ${document.getElementById('employee_email').value}`,`Duties: ${duties().map(key=>labels[key]).join(', ')}`,'',...visible.flatMap((section,index)=>[`SECTION ${index+1}: ${section.title.toUpperCase()}`,...section.items.flatMap(item=>{const answer=answers[item[0]]||{};return [`${++number}. ${item[1]}`,section.open?`Response: ${answer.response||''}`:`Rating: ${answer.rating||'Not answered'}${answer.rating?' ('+ratingNames[answer.rating]+')':''}`,...(section.open?[]:[`Comments: ${answer.comment||''}`]),''];})])].join('\n');
+ return ['LEADING CIVIL SOLUTIONS',titles[current],`Name: ${document.getElementById('employee_name').value}`,`Review period: ${document.getElementById('review_period').value}`,`Email: ${document.getElementById('employee_email').value}`,`Duties: ${duties().map(key=>labels[key]).join(', ')}`,'',...visible.flatMap((section,index)=>[`${section.open?'WRITTEN RESPONSES':'REVIEW SECTION '+section.items[0][2].split('.')[0]}: ${section.title.toUpperCase()}`,...section.items.flatMap(item=>{const answer=answers[item[0]]||{};return [`${section.open?++number+'.':item[2]} ${item[1]}`,section.open?`Response: ${answer.response||''}`:`Rating: ${answer.rating||'Not answered'}${answer.rating?' ('+ratingNames[answer.rating]+')':''}`,...(section.open?[]:[`Comments: ${answer.comment||''}`]),''];})])].join('\n');
 }
 document.querySelectorAll('.version').forEach(button=>button.addEventListener('click',()=>{captureAnswers();current=button.dataset.version;render();}));
 document.getElementById('print').addEventListener('click',()=>window.print());
