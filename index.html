@@ -35,7 +35,7 @@
 <div><label class="field-label" for="employee_email">Email address (optional)</label><input type="email" id="employee_email" name="_replyto" autocomplete="email"></div>
 </div></section>
 <fieldset class="scope" id="scope" hidden><legend>Which duties do you perform?</legend><div class="choices" id="choices"></div><p>Select duties you are assigned, including duties where you need further training.</p></fieldset>
-<div class="instructions"><strong>Instructions</strong><p>Select one rating for each question. The question numbers match the scored items in the staff review. Use the comment boxes to give examples or describe any training or support you need.</p><div class="scale"><span>1 · Unsatisfactory</span><span>2 · Needs Improvement</span><span>3 · Satisfactory</span><span>4 · Very Good</span><span>5 · Excellent</span><span>N/A · Not applicable</span></div><p>A comment is required for ratings of 1 or 2. Use N/A for duties outside your role or not performed during this review period.</p></div>
+<div class="instructions"><strong>Instructions</strong><p>Select one rating for each question. The question numbers match the scored items in the staff review. For each rating from 1 to 5, add a short comment explaining your rating, with an example where possible. You can also describe any training or support you need.</p><div class="scale"><span>1 · Unsatisfactory</span><span>2 · Needs Improvement</span><span>3 · Satisfactory</span><span>4 · Very Good</span><span>5 · Excellent</span><span>N/A · Not applicable</span></div><p>A comment is required for ratings 1–5. Select N/A for duties outside your role or not performed during this review period; comments are optional for N/A.</p></div>
 <div id="sections"></div>
 <p id="formStatus" class="form-status" role="alert"></p>
 <button class="submit" type="submit">Submit self-assessment</button>
@@ -581,16 +581,19 @@ function captureAnswers(){
 }
 function updateProgress(){
  const rated=visible.filter(section=>!section.open).flatMap(section=>section.items);
- const answered=document.querySelectorAll('#sections .question[data-kind="rated"] input:checked').length;
- document.getElementById('counts').textContent=`${answered} of ${rated.length} ratings completed · ${development.items.length} written-response questions`;
+ const completed=[...document.querySelectorAll('#sections .question')].filter(question=>question.dataset.kind==='rated'&&question.querySelector('input:checked')&&(question.querySelector('input:checked').value==='N/A'||question.querySelector('textarea').value.trim())).length;
+ document.getElementById('counts').textContent=`${completed} of ${rated.length} questions completed · ${development.items.length} written-response questions`;
 }
 function updateCommentRequirement(question){
  const rating=question.querySelector('input:checked')?.value;
  const textarea=question.querySelector('textarea');
- const needed=rating==='1'||rating==='2';
+ const hasComment=Boolean(textarea.value.trim());
+ const needed=rating!=='N/A';
  textarea.required=needed;
- textarea.setCustomValidity(needed&&!textarea.value.trim()?'Please explain a rating of 1 or 2.':'');
- question.querySelector('.required-note').hidden=!needed;
+ textarea.setCustomValidity(!needed||hasComment?'':'Please add a comment explaining your rating.');
+ const note=question.querySelector('.required-note');
+ note.textContent='Please add a short explanation or example to support your rating.';
+ note.hidden=!needed||hasComment||!rating;
 }
 function render(){
  captureAnswers();
@@ -619,11 +622,11 @@ function render(){
   const question=`<legend><span class="qno">${section.open?++number+'.':esc(reference)}</span>${esc(text)}</legend>`;
   if(section.open)return `<fieldset class="question" data-kind="open" data-question-id="${id}">${question}<label class="response-label" for="${id}">Your response</label><textarea id="${id}" name="${id}" rows="3" placeholder="Enter your response...">${esc(answer.response)}</textarea><div class="print-answer">${esc(answer.response)}</div></fieldset>`;
   const options=['1','2','3','4','5','N/A'].map(value=>`<label class="rating-choice" for="${id}_${value.replace('/','')}"><input type="radio" id="${id}_${value.replace('/','')}" name="${id}" value="${value}" aria-label="${value} ${ratingNames[value]}" ${answer.rating===value?'checked':''} required>${value}</label>`).join('');
-  return `<fieldset class="question" data-kind="rated" data-question-id="${id}" data-review-criterion="${esc(reference)}">${question}<div class="rating-options">${options}</div><label class="comment-label" for="${id}_comments">Comments or examples</label><span class="required-note" hidden>Please explain your rating of 1 or 2.</span><textarea id="${id}_comments" name="${id}_comments" rows="3" placeholder="Add an example or describe any training or support needed...">${esc(answer.comment)}</textarea><div class="print-answer">${esc(answer.comment)}</div></fieldset>`;
+  return `<fieldset class="question" data-kind="rated" data-question-id="${id}" data-review-criterion="${esc(reference)}">${question}<div class="rating-options">${options}</div><label class="comment-label" for="${id}_comments">Comments or examples (required for ratings 1–5)</label><span class="required-note" hidden>Please add a comment explaining your rating.</span><textarea id="${id}_comments" name="${id}_comments" rows="3" ${answer.rating==='N/A'?'':'required'} placeholder="Explain your rating with a short reason or example. Optional for N/A...">${esc(answer.comment)}</textarea><div class="print-answer">${esc(answer.comment)}</div></fieldset>`;
  }).join('')}</section>`).join('');
  document.querySelectorAll('#sections .question').forEach(question=>{
   const textarea=question.querySelector('textarea');
-  textarea.addEventListener('input',()=>{captureAnswers();question.querySelector('.print-answer').textContent=textarea.value;if(question.dataset.kind==='rated')updateCommentRequirement(question);});
+  textarea.addEventListener('input',()=>{captureAnswers();question.querySelector('.print-answer').textContent=textarea.value;if(question.dataset.kind==='rated'){updateCommentRequirement(question);updateProgress();}});
   if(question.dataset.kind==='rated'){updateCommentRequirement(question);question.querySelectorAll('input').forEach(input=>input.addEventListener('change',()=>{captureAnswers();updateCommentRequirement(question);updateProgress();}));}
  });
  if(!roleDuties.length){const note=document.createElement('p');note.className='empty';note.textContent='Select the duties performed to add the relevant technical questions.';document.getElementById('sections').prepend(note);}
